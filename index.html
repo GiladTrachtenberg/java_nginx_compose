@@ -1,0 +1,7 @@
+<h2> This is the documentation server! </h2>
+
+<p>The app is a project-management app, similar to Trello. It has a mysql database from which it draws content, and also injects content.</p>
+
+<p>Moreover, it has an nginx layer serving "reverse-proxy". Not really, of course, as the application and nginx are still hosted on the same network, just different ports</p>
+
+<p>All of this is configured on a docker-compose file, in which there is a container for the MySQL server, the application itself (frontend), the nginx layer and lastly, the documentation server.</p>

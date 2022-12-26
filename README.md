@@ -1,0 +1,1 @@
+Hello everyone! In this project, I Dockerized a Java application, conencted it to a MySQL DB (running on a Container) and put the front-end layer behind an NGINX reverse-proxy, whilst orchestrating everything with Docker-Compose. 

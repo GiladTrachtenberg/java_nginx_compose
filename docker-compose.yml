@@ -1,0 +1,68 @@
+version: '3.7'
+
+services:
+  nginx:
+    image: nginx:1.23-alpine
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./project/src/webapp:/usr/share/nginx/html/static
+    depends_on:
+      - app
+    networks:
+      - front-end
+      - back-end
+
+  app:
+    build: ./
+    expose:
+      - 8080
+    networks:
+      - back-end
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: mysql:5.7
+    expose:
+      - 3306
+    volumes:
+      - db_data:/var/lib/mysql/
+      - ./start.sql:/docker-entrypoint-initdb.d/initdb.sql
+      # - ./project/src/main/resources/io/lavagna/db/MYSQL:/docker-entrypoint-initdb.d/
+      # restart: always
+    environment:
+      - MYSQL_DATABASE=lavagna
+      - MYSQL_ROOT_PASSWORD=superpass
+    networks:
+      - back-end
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "-uroot",
+          "-psuperpass",
+          "ping",
+          "-h",
+          "localhost"
+        ]
+      timeout: 20s
+      retries: 10
+  
+  documentation:
+    image: doc:v2 
+    ports:
+     - 8080:80
+    networks:
+      - document
+
+
+networks:
+  front-end:
+  back-end:
+  document:
+
+volumes:
+  db_data:
